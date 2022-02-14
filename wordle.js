@@ -15290,6 +15290,7 @@ const dictionary = [
     "shave"
   ];
 
+const WORD_LENGTH = 5;//makes code refactorable 
 const guessGrid = document.querySelector("[data-guess-grid]")
 startInteraction()
 
@@ -15317,6 +15318,7 @@ startInteraction()
     }
 
     if (e.target.matches("[data-delete]")) {
+      //if pressed key matches the delete key
         deleteKey()
         return
     }
@@ -15332,6 +15334,7 @@ startInteraction()
     }
 
     if (e.key === "Backspace" || e.key === "Delete") {
+      //keyboard event w/ delete property
         deleteKey()
         return
     }
@@ -15344,9 +15347,26 @@ startInteraction()
   }
 
   function pressKey(key) {
+    const activeTiles = getActiveTiles()
+    //if there are 5 active tiles, new line(restart process)
+    if (activeTiles.length >= WORD_LENGTH) return;
+
     const nextTile = guessGrid.querySelector(":not([data-letter])")
     //selects first tile that doesnt have a data-letter already
     nextTile.dataset.letter = key.toLowerCase()
     nextTile.textContent = key
-    nextTile.dataset.state = "active"
+    nextTile.dataset.state = "active" //executes css selector
+
+  }
+
+  function deleteKey() {
+    const activeTiles = getActiveTiles();
+    const lastTile = activeTiles[activeTiles.length - 1];
+    if (lastTile === null) return
+  }
+
+  function getActiveTiles() {
+    return guessGrid.querySelectorAll("[data-state='active']")
+    //returns list of active tiles to be used in pressKey
+
   }
