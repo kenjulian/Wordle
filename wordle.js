@@ -15376,7 +15376,8 @@ startInteraction()
   function submitGuess() {
     const activeTiles = [...getActiveTiles];
     if (activeTiles.length !== WORD_LENGTH) {
-      alert('Your guess is too short')
+      showAlert('Your guess is too short')
+      shakeTiles(activeTiles)
       return
     }
 
