@@ -15292,6 +15292,11 @@ const dictionary = [
 
 const WORD_LENGTH = 5;//makes code refactorable 
 const guessGrid = document.querySelector("[data-guess-grid]")
+const offsetFromDate = new Date(2022, 1, 14)
+const msOffset = Date.now() - offsetFromDate
+const dayOffset = msOffset / 1000 / 60 / 60 / 24
+const targetWord = targetWords[Math.floor(dayOffset)]
+
 startInteraction()
 
   function startInteraction() {
@@ -15311,7 +15316,7 @@ startInteraction()
         return
     }
 
-    if (e.target.matches("[data-enter")) {
+    if (e.target.matches("[data-enter]")) {
         //if pressed key matches the enter key
         submitGuess()
         return
@@ -15362,7 +15367,19 @@ startInteraction()
   function deleteKey() {
     const activeTiles = getActiveTiles();
     const lastTile = activeTiles[activeTiles.length - 1];
-    if (lastTile === null) return
+    if (lastTile == null) return //if there is no tile in the row, do nothing
+    lastTile.textContent = ""
+    delete lastTile.dataset.state;
+    delete lastTile.dataset.letter;
+  }
+
+  function submitGuess() {
+    const activeTiles = [...getActiveTiles];
+    if (activeTiles.length !== WORD_LENGTH) {
+      alert('Your guess is too short')
+      return
+    }
+
   }
 
   function getActiveTiles() {
