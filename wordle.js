@@ -15291,6 +15291,7 @@ const dictionary = [
   ];
 
 const WORD_LENGTH = 5;//makes code refactorable 
+const alertContainer = document.querySelector("[data-alert-container]")
 const guessGrid = document.querySelector("[data-guess-grid]")
 const offsetFromDate = new Date(2022, 1, 14)
 const msOffset = Date.now() - offsetFromDate
@@ -15381,10 +15382,53 @@ startInteraction()
       return
     }
 
+    const guess = activeTiles.reduce((word, tile) => {
+      return word + tile.dataset.letter
+    }, "")
+
+    if (!dictionary.includes(guess)) {
+      showAlert("Not in word list")
+      shakeTiles(activeTiles)
+      return
+    }
+
+    stopInteraction()
+    activeTiles.forEach((...params) => flipTile(...params, guess))
+
+  }
+
+  function flipTiles(tile, index, array, guess) {
+    
   }
 
   function getActiveTiles() {
     return guessGrid.querySelectorAll("[data-state='active']")
     //returns list of active tiles to be used in pressKey
 
+  }
+
+  function showAlert(message, duration = 1000) {
+    const alert = document.createElement("div");
+    alert.textContent = message;
+    alert.classList.add("alert");
+    alertContainer.prepend(alert);
+
+    if (duration == null) return;
+
+    setTimeout(() => {
+      alert.classList.add("hide")
+      alert.addEventListener("transitionend",() => {
+        alert.remove()
+      })
+    }, duration)
+
+  }
+
+  function shakeTiles(tiles) {
+    tiles.forEach(tile => {
+      tile.classList.add("shake")
+      tile.addEventListener("animationend", () => {
+        tile.classList.remove("shake")
+      }, {once: true})
+    })
   }
